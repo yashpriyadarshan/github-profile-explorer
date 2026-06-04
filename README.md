@@ -6,7 +6,7 @@ A full-stack web application that allows users to search for public GitHub profi
 
 ## 🔗 Live Demo Links
 
-*   **Frontend Client**: [https://github-profile-explorer.vercel.app](https://yashgithubexplorer.vercel.app)
+*   **Frontend Client**: [https://yashgithubexplorer.vercel.app](https://yashgithubexplorer.vercel.app)
 
 ---
 
