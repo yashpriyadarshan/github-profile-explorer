@@ -27,19 +27,41 @@ A full-stack web application that allows users to search for public GitHub profi
 
 ## 🚀 How to Run Locally
 
-Follow these exact steps to run the application on your local machine.
+Follow these steps to run the application on your local machine.
 
-### Prerequisites
-*   **Node.js** (v18.0.0 or higher is recommended)
-
-### 1. Clone & Set Up the Repository
-Open your terminal and clone the repository, then navigate to the root directory:
+### 1. Clone & Navigate to the Repository
+Open your terminal, clone the repository, and enter the project folder:
 ```bash
 git clone https://github.com/yashpriyadarshan/github-profile-explorer.git
 cd github-profile-explorer
 ```
 
-### 2. Start the Backend Server
+### 2. Choose Your Run Method
+
+#### Method A: Using Docker Compose (Recommended)
+
+If you have Docker and Docker Compose installed, spin up the entire full-stack application with a single command from the project root:
+```bash
+docker compose up --build
+```
+
+This command automatically builds the frontend client and backend server images, configures environment variables, and binds the ports:
+*   Frontend Client: **`http://localhost:5173`**
+*   Backend Server API: **`http://localhost:5000`**
+
+To stop the containers, press `Ctrl + C` or run:
+```bash
+docker compose down
+```
+
+---
+
+#### Method B: Manual Node.js Setup (Alternative)
+
+##### Prerequisites
+*   **Node.js** (v18.0.0 or higher is recommended)
+
+##### 1. Start the Backend Proxy Server
 Navigate to the `server` directory, install dependencies, and start the server:
 ```bash
 cd server
@@ -48,10 +70,10 @@ node server.js
 ```
 The server will start running on **`http://localhost:5000`**.
 
-### 3. Start the Frontend Client
+##### 2. Start the Frontend Client
 Open a **new terminal tab/window**, navigate to the `client` directory, install dependencies, and start the development server:
 ```bash
-cd client
+cd ../client
 npm install
 
 # Create environment file
