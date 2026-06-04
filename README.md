@@ -10,6 +10,19 @@ A full-stack web application that allows users to search for public GitHub profi
 
 ---
 
+## ✨ Features
+
+- Search GitHub users and view their public profile information.
+- Browse repositories with sorting by name, stars, or last updated date.
+- Expand repositories to view additional details.
+- Server-side caching to reduce GitHub API requests and rate-limit issues.
+- Pagination for easier navigation of repositories.
+- Loading states and comprehensive error handling.
+- Fully responsive UI built with Tailwind CSS.
+- ⭐ Recently searched users stored in Local Storage.
+- ⭐ Debounced search for improved performance.
+- ⭐ Language distribution chart for repository analytics.
+
 ## 🛠️ Tech Stack
 
 ### Frontend (Client)
@@ -192,7 +205,7 @@ Below is an overview of the folder structure and the files that live in each:
 │   │   ├── App.jsx             # Main App layout & styling wrappers
 │   │   ├── index.css           # Tailwind CSS imports & global design variables
 │   │   └── main.jsx            # React root mount file
-│   ├── .env                    # Configures environment variables (VITE_API_URL)
+│   ├── .env.example            # Configures environment variables (VITE_API_URL)
 │   ├── index.html              # HTML shell template
 │   ├── vite.config.js          # Vite compilation & plugin settings
 │   └── package.json            # Client scripts and dependencies
