@@ -1,0 +1,20 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ./server
+    container_name: github-explorer-backend
+    ports:
+      - "5000:5000"
+
+  frontend:
+    build:
+      context: ./client
+    container_name: github-explorer-frontend
+    ports:
+      - "5173:5173"
+    env_file:
+      - ./client/.env.example
+    depends_on:
+      - backend 

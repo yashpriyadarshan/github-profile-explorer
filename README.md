@@ -1,12 +1,12 @@
 # 🔍 GitHub Profile & Repository Explorer
 
-A full-stack web application that allows users to search for public GitHub profiles, view detailed user statistics (bio, followers, count of public repos), visualize their programming language distribution via an interactive pie chart, and browse their repositories in an expandable list with pagination. Built as a technical exercise to demonstrate proxying third-party APIs, in-memory caching to optimize rate-limit consumption, debounced search performance, custom accessible UI elements, and a responsive glassmorphic design.
+A full-stack web application that allows users to search for public GitHub profiles, view detailed user statistics (bio, followers, count of public repos), visualize their programming language distribution via an interactive pie chart, and browse their repositories in an expandable list with pagination. Built as a technical exercise to demonstrate proxying third-party APIs, in-memory caching to optimize rate-limit consumption, debounced search performance, custom accessible UI elements, and a responsive design.
 
 ---
 
 ## 🔗 Live Demo Links
 
-*   **Frontend Client**: [https://yashgithubexplorer.vercel.app](https://yashgithubexplorer.vercel.app)
+*   **Client**: [https://yashgithubexplorer.vercel.app](https://yashgithubexplorer.vercel.app)
 
 ---
 
@@ -14,7 +14,7 @@ A full-stack web application that allows users to search for public GitHub profi
 
 ### Frontend (Client)
 *   **React 19 & Vite 8**: Used for building a highly responsive, single-page UI. Vite provides extremely fast Hot Module Replacement (HMR) and optimized production bundles.
-*   **Tailwind CSS (V4)**: Provides a modern, utility-first styling system to build a polished, responsive, and glassmorphic user interface without writing excessive custom CSS.
+*   **Tailwind CSS (V4)**: Provides a modern, utility-first styling system to build a polished, responsive, and user interface without writing excessive custom CSS.
 *   **Recharts (v3)**: A declarative React charting library used to generate the interactive Language Distribution Pie Chart, offering smooth animations and tooltips.
 *   **Axios**: Chosen for its robust promise-based API and built-in support for interceptors, request cancellation, and simplified JSON handling.
 
@@ -53,6 +53,18 @@ Open a **new terminal tab/window**, navigate to the `client` directory, install 
 ```bash
 cd client
 npm install
+
+# Create environment file
+# macOS/Linux:
+cp .env.example .env
+
+# Windows (Command Prompt):
+copy .env.example .env
+
+# Windows (PowerShell):
+Copy-Item .env.example .env
+
+# Start development server
 npm run dev
 ```
 The application will launch on **`http://localhost:5173`** (or the port output by Vite in your terminal). Open this URL in your browser to view the application.
@@ -147,7 +159,7 @@ Below is an overview of the folder structure and the files that live in each:
 │   │   │   ├── LanguageChart.jsx  # Recharts PieChart visualizing language usage percentage
 │   │   │   ├── LoadingSpinner.jsx # Animated spinner loader for active fetching states
 │   │   │   ├── Pagination.jsx     # Next/Prev buttons and page trackers
-│   │   │   ├── ProfileCard.jsx    # Glassmorphic card displaying user avatar & bio stats
+│   │   │   ├── ProfileCard.jsx    # Profile card displaying user avatar & bio stats
 │   │   │   ├── RepoCard.jsx       # Expandable repository details card (issues, default branch)
 │   │   │   ├── RepoList.jsx       # Lists all RepoCards or renders empty states
 │   │   │   ├── SearchBar.jsx      # Search input with debounced typing listeners
