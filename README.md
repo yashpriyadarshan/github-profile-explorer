@@ -1,163 +1,201 @@
-# GitHub Profile & Repository Explorer
+# 🔍 GitHub Profile & Repository Explorer
 
-A full-stack web application that allows users to explore public GitHub profiles and their repositories. Built as a technical exercise to demonstrate proxying third-party APIs, in-memory caching, rate-limit resilience, responsive design, and smooth user interactions.
-
----
-
-## 🚀 Key Features
-
-* **Proxy Server Architecture**: All client requests are proxied through an Express server. This hides GitHub API keys (or tokens) from the client and enables centralized caching.
-* **Server-Side In-Memory Caching**: Implements a 60-second TTL (Time-to-Live) in-memory cache for profiles and repositories to prevent redundant API hits and safeguard against GitHub's rate limits.
-* **Debounced Search**: Features search-as-you-type with a 500ms debounce window on the frontend, ensuring the backend is not overloaded during active typing.
-* **Language Distribution Chart**: Calculates user language statistics across the fetched repositories and visualizes them using a clean, interactive Pie Chart powered by Recharts.
-* **Collapsible Repo Details**: Users can click any repository card to expand details like the count of open issues, the default branch, and a direct link to the repository on GitHub.
-* **Client-Side Persistent History**: Persists the last 5 successful searches in `localStorage` for easy one-click retrieval.
-* **Responsive Styling & Micro-interactions**: Beautiful, responsive layout styled with Tailwind CSS (V4), featuring custom, accessible hover dropdowns and interactive buttons optimized for both mobile and desktop screens.
+A full-stack web application that allows users to search for public GitHub profiles, view detailed user statistics (bio, followers, count of public repos), visualize their programming language distribution via an interactive pie chart, and browse their repositories in an expandable list with pagination. Built as a technical exercise to demonstrate proxying third-party APIs, in-memory caching to optimize rate-limit consumption, debounced search performance, custom accessible UI elements, and a responsive glassmorphic design.
 
 ---
 
-## 🛠️ Technology Stack
+## 🔗 Live Demo Links
+
+*   **Frontend Client**: [https://github-profile-explorer.vercel.app](https://github-profile-explorer.vercel.app) *(Example Placeholder)*
+*   **Backend Server API**: [https://github-profile-explorer-api.onrender.com](https://github-profile-explorer-api.onrender.com) *(Example Placeholder)*
+
+---
+
+## 🛠️ Tech Stack
 
 ### Frontend (Client)
-* **Framework**: React 19 + Vite 8
-* **Styling**: Tailwind CSS (V4)
-* **Charts**: Recharts
-* **HTTP Client**: Axios
+*   **React 19 & Vite 8**: Used for building a highly responsive, single-page UI. Vite provides extremely fast Hot Module Replacement (HMR) and optimized production bundles.
+*   **Tailwind CSS (V4)**: Provides a modern, utility-first styling system to build a polished, responsive, and glassmorphic user interface without writing excessive custom CSS.
+*   **Recharts (v3)**: A declarative React charting library used to generate the interactive Language Distribution Pie Chart, offering smooth animations and tooltips.
+*   **Axios**: Chosen for its robust promise-based API and built-in support for interceptors, request cancellation, and simplified JSON handling.
 
 ### Backend (Server)
-* **Environment**: Node.js
-* **Framework**: Express.js
-* **HTTP Client**: Axios
+*   **Node.js & Express.js**: Forms the lightweight proxy server. Express handles request routing, cors configurations, and payload parsers efficiently.
+*   **In-Memory Cache (JavaScript Map)**: Implements a 60-second Time-To-Live (TTL) cache to save profile and repository data locally, protecting the client against GitHub's strict rate limits (60 unauthenticated requests/hour).
+*   **Axios**: Fetches user profiles and repository details asynchronously from the official GitHub REST API.
+
+---
+
+## 🚀 How to Run Locally
+
+Follow these exact steps to run the application on your local machine.
+
+### Prerequisites
+*   **Node.js** (v18.0.0 or higher is recommended)
+
+### 1. Clone & Set Up the Repository
+Open your terminal and clone the repository, then navigate to the root directory:
+```bash
+git clone https://github.com/yashpriyadarshan/github-profile-explorer.git
+cd github-profile-explorer
+```
+
+### 2. Start the Backend Server
+Navigate to the `server` directory, install dependencies, and start the server:
+```bash
+cd server
+npm install
+node server.js
+```
+The server will start running on **`http://localhost:5000`**.
+
+### 3. Start the Frontend Client
+Open a **new terminal tab/window**, navigate to the `client` directory, install dependencies, and start the development server:
+```bash
+cd client
+npm install
+npm run dev
+```
+The application will launch on **`http://localhost:5173`** (or the port output by Vite in your terminal). Open this URL in your browser to view the application.
+
+---
+
+## 📄 API Documentation
+
+All client requests are proxied through our Express server to safeguard third-party APIs and handle caching.
+
+### Get GitHub User and Repositories
+
+*   **URL**: `/api/github/:username`
+*   **Method**: `GET`
+*   **Path Parameters**:
+    *   `username` (string, required): The target GitHub handle (case-insensitive).
+*   **Query Parameters**:
+    *   `sort` (string, optional): Sort repository list. Options: `updated` *(default)*, `stars`, `name`.
+    *   `page` (number, optional): Page number for paginated repository lists. Default: `1`.
+    *   `limit` (number, optional): Number of repositories per page. Default: `10`.
+*   **Request Body**: None.
+
+#### Response Shape
+
+##### **Success (200 OK)**
+```json
+{
+  "user": {
+    "login": "octocat",
+    "name": "The Octocat",
+    "avatarUrl": "https://avatars.githubusercontent.com/u/5832347?v=4",
+    "bio": "Testing branch merge conflicts",
+    "followers": 15004,
+    "following": 9,
+    "publicRepos": 8
+  },
+  "repos": [
+    {
+      "id": 18293049,
+      "name": "boysenberry-repo-1",
+      "description": "Testing git merge conflicts",
+      "language": "Ruby",
+      "stars": 4,
+      "updatedAt": "2026-05-10T11:42:15Z",
+      "htmlUrl": "https://github.com/octocat/boysenberry-repo-1",
+      "openIssues": 2,
+      "defaultBranch": "master"
+    }
+  ],
+  "totalRepos": 8,
+  "currentPage": 1,
+  "totalPages": 1
+}
+```
+
+##### **User Not Found (404 Not Found)**
+```json
+{
+  "message": "GitHub user not found"
+}
+```
+
+##### **Rate Limit Exceeded (429 Too Many Requests)**
+```json
+{
+  "message": "GitHub API rate limit exceeded. Please try again later."
+}
+```
+
+##### **Internal Server Error (500 Internal Server Error)**
+```json
+{
+  "message": "Internal Server Error"
+}
+```
 
 ---
 
 ## 📁 Project Structure
 
+Below is an overview of the folder structure and the files that live in each:
+
 ```text
-github-repo-explorer/
-├── client/                 # Frontend React Application
-│   ├── src/
-│   │   ├── api/            # API integration Layer
-│   │   ├── components/     # Reusable UI Components (SearchBar, SortDropdown, RepoCard, etc.)
-│   │   ├── pages/          # Page layouts (Home page)
-│   │   ├── App.jsx         # Main App Wrapper
-│   │   └── index.css       # Tailwind configuration & core styles
-│   └── package.json
+.
+├── client/                     # React Frontend Application
+│   ├── public/                 # Static assets directly served to the browser
+│   ├── src/                    # React source files
+│   │   ├── api/                # Network requests configurations
+│   │   │   └── githubApi.js    # Axios client configured to call our proxy server
+│   │   ├── components/         # Reusable UI components
+│   │   │   ├── ErrorMessage.jsx   # Error alert card displaying backend messages
+│   │   │   ├── LanguageChart.jsx  # Recharts PieChart visualizing language usage percentage
+│   │   │   ├── LoadingSpinner.jsx # Animated spinner loader for active fetching states
+│   │   │   ├── Pagination.jsx     # Next/Prev buttons and page trackers
+│   │   │   ├── ProfileCard.jsx    # Glassmorphic card displaying user avatar & bio stats
+│   │   │   ├── RepoCard.jsx       # Expandable repository details card (issues, default branch)
+│   │   │   ├── RepoList.jsx       # Lists all RepoCards or renders empty states
+│   │   │   ├── SearchBar.jsx      # Search input with debounced typing listeners
+│   │   │   └── SortDropdown.jsx   # Dropdown menu to control sorting (name, stars, updated)
+│   │   ├── pages/              # Page layouts
+│   │   │   └── Home.jsx        # Main dashboard page coordinating search state & history
+│   │   ├── App.css             # Component-specific styles
+│   │   ├── App.jsx             # Main App layout & styling wrappers
+│   │   ├── index.css           # Tailwind CSS imports & global design variables
+│   │   └── main.jsx            # React root mount file
+│   ├── .env                    # Configures environment variables (VITE_API_URL)
+│   ├── index.html              # HTML shell template
+│   ├── vite.config.js          # Vite compilation & plugin settings
+│   └── package.json            # Client scripts and dependencies
 │
-├── server/                 # Express Backend Proxy
-│   ├── cache/              # In-memory caching logic
-│   ├── routes/             # REST API Routes
-│   ├── service/            # GitHub API service logic
-│   ├── utils/              # Helper utilities (sorting, pagination)
-│   ├── server.js           # Server entry point
-│   └── package.json
-│
-└── README.md
+└── server/                     # Express Backend Proxy
+    ├── cache/                  # Server-side caching logic
+    │   └── cache.js            # Standard JavaScript Map serving as local in-memory cache
+    ├── routes/                 # REST API endpoints routing
+    │   └── githubRoutes.js     # Declares and parses /api/github/:username
+    ├── service/                # Business logic & external API integration
+    │   └── githubService.js    # Handles caching, fetching from GitHub, formatting payload
+    ├── utils/                  # Helper utilities
+    │   ├── pagination.js       # Slices the array of repos for current page
+    │   └── repoSorter.js       # Sorts repos by stars, name, or update dates
+    ├── server.js               # Entry point of the Express application
+    └── package.json            # Server scripts and dependencies
 ```
 
 ---
 
-## 🧩 Component & Modules Mapping ("What is used for What")
+## 🔮 Next Steps
 
-### Frontend (Client)
+Below are the features that were deprioritized for this initial release and what should be built next:
 
-* **[Home.jsx](file:///Ubuntu/home/yash/Code/github-repo-explorer/client/src/pages/Home.jsx)**: The central dashboard component. It acts as the state hub, managing profile data, loaders, error messages, search history list, current sorting choice, search parameters, and pages. It coordinates all child components and mounts the `useEffect` hooks for debounced fetching and local storage syncing.
-* **[SearchBar.jsx](file:///Ubuntu/home/yash/Code/github-repo-explorer/client/src/components/SearchBar.jsx)**: Renders the search text field and action button. Binds state values and submits form queries to trigger user queries.
-* **[ProfileCard.jsx](file:///Ubuntu/home/yash/Code/github-repo-explorer/client/src/components/ProfileCard.jsx)**: Displays user details including their profile picture, bio description, followers/following tallies, and overall repository counts.
-* **[LanguageChart.jsx](file:///Ubuntu/home/yash/Code/github-repo-explorer/client/src/components/LanguageChart.jsx)**: Implements an interactive **Recharts** `PieChart` to display the percentage distribution of programming languages used across the user's repositories.
-* **[RepoList.jsx](file:///Ubuntu/home/yash/Code/github-repo-explorer/client/src/components/RepoList.jsx)**: A container layout that loops over the returned repositories array, renders individual `RepoCard` units, and manages empty status messaging.
-* **[RepoCard.jsx](file:///Ubuntu/home/yash/Code/github-repo-explorer/client/src/components/RepoCard.jsx)**: Renders descriptive details for a single repository. Includes toggleable state (`expanded`) to reveal details on click (open issues count, default branch, link to GitHub).
-* **[SortDropdown.jsx](file:///Ubuntu/home/yash/Code/github-repo-explorer/client/src/components/SortDropdown.jsx)**: Renders a custom styled dropdown to let users select and toggle sorting criteria (`updated` | `stars` | `name`).
-* **[Pagination.jsx](file:///Ubuntu/home/yash/Code/github-repo-explorer/client/src/components/Pagination.jsx)**: Renders pagination navigators (`Previous` / `Next`) and tracks page progress.
-* **[LoadingSpinner.jsx](file:///Ubuntu/home/yash/Code/github-repo-explorer/client/src/components/LoadingSpinner.jsx)**: A lightweight animated spinner shown during asynchronous network loads.
-* **[ErrorMessage.jsx](file:///Ubuntu/home/yash/Code/github-repo-explorer/client/src/components/ErrorMessage.jsx)**: Renders error notification alerts (e.g., "GitHub user not found") to the user.
-* **[githubApi.js](file:///Ubuntu/home/yash/Code/github-repo-explorer/client/src/api/githubApi.js)**: Configures and exports an **Axios** client configured to call the Express API.
-
-### Backend (Server)
-
-* **[server.js](file:///Ubuntu/home/yash/Code/github-repo-explorer/server/server.js)**: Configures the Node environment, registers CORS and parser filters, mounts the GitHub route handlers, and hosts the app on port `5000`.
-* **[githubRoutes.js](file:///Ubuntu/home/yash/Code/github-repo-explorer/server/routes/githubRoutes.js)**: Maps the HTTP endpoint `GET /api/github/:username`, reads request parameters, runs the service query, and handles response codes (e.g., `404` for not found, `429` for rate limits).
-* **[githubService.js](file:///Ubuntu/home/yash/Code/github-repo-explorer/server/service/githubService.js)**: Fetches raw JSON profiles and repository data from the GitHub API using **Axios**, models and filters the payloads, tracks cache timers, and returns local sorting and pagination slices.
-* **[cache.js](file:///Ubuntu/home/yash/Code/github-repo-explorer/server/cache/cache.js)**: Simple `Map` wrapper that handles in-memory cache operations.
-* **[repoSorter.js](file:///Ubuntu/home/yash/Code/github-repo-explorer/server/utils/repoSorter.js)**: Sorts lists of repositories in ascending/descending directions by name, star counts, or last updated dates.
-* **[pagination.js](file:///Ubuntu/home/yash/Code/github-repo-explorer/server/utils/pagination.js)**: Helper utility that slices the repositories array into chunks matching the requested page and limit.
-
----
-
-## ⚙️ Setup & Installation
-
-### Prerequisites
-* [Node.js](https://nodejs.org/) (v20+ recommended)
-* [npm](https://www.npmjs.com/)
-
-### 1. Server Configuration
-Navigate to the server directory:
-```bash
-cd server
-```
-
-Install dependencies:
-```bash
-npm install
-```
-
-Configure environment variables:
-Create a `.env` file in the `server` directory:
-```env
-PORT=5000
-# Optional: Provide a token to increase the rate limit to 5000 req/hr
-GITHUB_TOKEN=your_personal_access_token_here
-```
-
-Start the backend server:
-```bash
-npm start
-```
-The server will start running at `http://localhost:5000`.
-
----
-
-### 2. Client Configuration
-Navigate to the client directory:
-```bash
-cd ../client
-```
-
-Install dependencies:
-```bash
-npm install
-```
-
-Configure environment variables:
-Create a `.env` file in the `client` directory:
-```env
-VITE_API_URL=http://localhost:5000/api/github
-```
-
-Start the Vite development server:
-```bash
-npm run dev
-```
-The application will be accessible at the port outputted by Vite (typically `http://localhost:5173`).
-
----
-
-## 🧠 Design Decisions & Tradeoffs
-
-### 1. Backend vs. Frontend Pagination
-* **Decision**: Fetching up to 100 repositories from GitHub initially, caching them in the backend, and then sorting and paginating locally.
-* **Why**: Since GitHub's rate limits are strictly enforced (especially for unauthenticated clients), loading up to 100 repositories at once and caching them yields a much better user experience. Sorting and pagination transitions are instantaneous for the client, and the backend only makes a single cached call to GitHub instead of making a new rate-limited call every time the page changes.
-
-### 2. Debouncing & Input State
-* **Decision**: Binding the search input to a debounced `useEffect` timer, while preserving a physical "Search" submit button.
-* **Why**: Providing both allows desktop users to experience fast, automatic search results as they type, while mobile users can complete typing and tap "Search" without triggering unfinished queries prematurely.
-
-### 3. Lightweight Custom Dropdown
-* **Decision**: Upgraded the standard `<select>` to a hybrid mouse-hover (PC) / tap-to-toggle (mobile) custom dropdown component.
-* **Why**: Native elements are notoriously hard to style cleanly, but pure CSS hover menus break on mobile touch devices. By implementing a click-outside hook alongside mouse enter/leave events, the dropdown functions flawlessly and looks premium on both platforms.
-
----
-
-## 📬 Contact & Submission Details
-* **Author**: Yash
-* **Brief By**: Studio Graphene (hello@studiographene.com)
+1.  **GitHub OAuth Integration**:
+    *   *What was chosen not to do*: Authentication with the GitHub API.
+    *   *Why & Next Steps*: Currently, the app uses unauthenticated requests which limits GitHub requests to 60/hour. Integrating GitHub OAuth would authenticate requests on behalf of the logged-in user, raising the limit to 5,000/hour and enabling support for viewing private repositories.
+2.  **Persistent Cache (Redis)**:
+    *   *What was chosen not to do*: A persistent data caching layer.
+    *   *Why & Next Steps*: The backend currently stores cache in local RAM via a JavaScript `Map`. If the server restarts or scales horizontally, the cache is lost. Implementing a Redis database would make the cache persistent, shared across server instances, and scalable.
+3.  **Detailed Repository Analytics**:
+    *   *What was chosen not to do*: Deep repository metrics.
+    *   *Why & Next Steps*: We only show basic repository details on expansion. Future additions include displaying commit history statistics, line change graphs, contribution calendars, and branch lists for each repository.
+4.  **Client-side Repository Filtering**:
+    *   *What was chosen not to do*: Filtering repositories by language or search queries.
+    *   *Why & Next Steps*: We only support sorting. Adding a live filter input on the client would let users instantly filter down repositories (e.g., only "JavaScript" or containing "test") without requesting new backend pages.
+5.  **Testing Suite**:
+    *   *What was chosen not to do*: Unit, integration, and End-to-End testing.
+    *   *Why & Next Steps*: Introduce **Vitest** for testing backend services and **Playwright** / **React Testing Library** for frontend UI testing.
