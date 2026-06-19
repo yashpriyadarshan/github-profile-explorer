@@ -3,6 +3,11 @@ const cors = require("cors")
 
 const app = express();
 
+const allowedOrigins = [
+    "http://localhost:5173",
+    "https://yashgithubexplorer.vercel.app/"
+];
+
 const githubRoutes = require("./routes/githubRoutes");
 
 app.use(cors());
